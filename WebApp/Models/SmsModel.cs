@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,10 +16,11 @@ namespace WebApp.Models
 
     public class SmsModel
     {
+        [Key]
+        public string Sid { get; set; }
         public string SmsPhoneNumber { get; set; }
         public string MessageBody { get; set; }
         public DateTime SmsSentDateTime { get; set; }
-        public string Sid { get; set; }
         public SmsDelieveryStatus DeliveryStatus { get; set; }
     }
 }
