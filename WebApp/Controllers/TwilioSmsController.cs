@@ -2,41 +2,125 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebApp;
 using WebApp.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApp.Controllers
 {
     [Route("api/[controller]")]
-    public class TwilioSmsController : Controller
+    [ApiController]
+    public class TwilioSmsController : ControllerBase
     {
-        // GET: api/values
+        private readonly SmsDbContext _context;
+
+        public TwilioSmsController(SmsDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/TwilioSms
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<TwilioSmsModel> GetTwilioSmsModels()
         {
-            return new string[] { "value1", "value2" };
+            return _context.TwilioSmsModels;
         }
 
-        // GET api/values/5
+        // GET: api/TwilioSms/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetTwilioSmsModel([FromRoute] string id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var twilioSmsModel = await _context.TwilioSmsModels.FindAsync(id);
+
+            if (twilioSmsModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(twilioSmsModel);
         }
 
-        // POST api/values
+        // PUT: api/TwilioSms/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTwilioSmsModel([FromRoute] string id, [FromBody] TwilioSmsModel twilioSmsModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != twilioSmsModel.SmsSid)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(twilioSmsModel).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TwilioSmsModelExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: api/TwilioSms
         [HttpPost]
-        public void Post(TwilioSmsModel twilioSmsModel)
+        public async Task<IActionResult> PostTwilioSmsModel([FromBody] TwilioSmsModel twilioSmsModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.TwilioSmsModels.Add(twilioSmsModel);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTwilioSmsModel", new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
         }
 
-       
-        // DELETE api/values/5
+        // DELETE: api/TwilioSms/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteTwilioSmsModel([FromRoute] string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var twilioSmsModel = await _context.TwilioSmsModels.FindAsync(id);
+            if (twilioSmsModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.TwilioSmsModels.Remove(twilioSmsModel);
+            await _context.SaveChangesAsync();
+
+            return Ok(twilioSmsModel);
+        }
+
+        private bool TwilioSmsModelExists(string id)
+        {
+            return _context.TwilioSmsModels.Any(e => e.SmsSid == id);
         }
     }
 }
