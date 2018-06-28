@@ -16,7 +16,7 @@ namespace WebApp
         {
         }
 
-        public virtual DbSet<SmsModel> SmsModels { get; set; }
+        public virtual DbSet<TwilioSmsModel> TwilioSmsModels { get; set; }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<SmsModel>().HasData(
