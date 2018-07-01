@@ -12,23 +12,33 @@ namespace WebApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TwilioSmsController : ControllerBase
+    public class SmsController : ControllerBase
     {
         private readonly SmsDbContext _context;
 
-        public TwilioSmsController(SmsDbContext context)
+        public SmsController(SmsDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/TwilioSms
+        // GET: api/Sms
         [HttpGet]
         public IEnumerable<TwilioSmsModel> GetTwilioSmsModels()
         {
+            if (_context.TwilioSmsModels.Count() == 0)
+            {
+                _context.AddRange(new List<TwilioSmsModel>()
+                {
+                    new TwilioSmsModel {SmsSid="0001"},
+                    new TwilioSmsModel {SmsSid="0002"}
+                });
+                _context.SaveChanges();
+            }
+
             return _context.TwilioSmsModels;
         }
 
-        // GET: api/TwilioSms/5
+        // GET: api/Sms/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTwilioSmsModel([FromRoute] string id)
         {
@@ -47,7 +57,7 @@ namespace WebApp.Controllers
             return Ok(twilioSmsModel);
         }
 
-        // PUT: api/TwilioSms/5
+        // PUT: api/Sms/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTwilioSmsModel([FromRoute] string id, [FromBody] TwilioSmsModel twilioSmsModel)
         {
@@ -82,7 +92,7 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
-        // POST: api/TwilioSms
+        // POST: api/Sms
         [HttpPost]
         public async Task<IActionResult> PostTwilioSmsModel([FromBody] TwilioSmsModel twilioSmsModel)
         {
@@ -97,7 +107,7 @@ namespace WebApp.Controllers
             return CreatedAtAction("GetTwilioSmsModel", new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
         }
 
-        // DELETE: api/TwilioSms/5
+        // DELETE: api/Sms/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTwilioSmsModel([FromRoute] string id)
         {
