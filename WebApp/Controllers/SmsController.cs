@@ -92,29 +92,22 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
+        // POST: api/Sms
         [HttpPost]
-        public string JsonStringBody([FromBody] string content)
-        {
-            return "";
-        }
-
-
-        // POST: api/SmsBody
-        //[HttpPost]
         //public async Task<IActionResult> PostTwilioSmsModel([FromBody] TwilioSmsModel twilioSmsModel)
-        //public async Task<IActionResult> Post()
-        //{
+        public async Task<IActionResult> Post([FromForm] TwilioSmsModel twilioSmsModel)
+        {
             //var twilioSmsModel = new TwilioSmsModel();
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            //_context.TwilioSmsModels.Add(twilioSmsModel);
-            //await _context.SaveChangesAsync();
+            _context.TwilioSmsModels.Add(twilioSmsModel);
+            await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetTwilioSmsModel", new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
-        //}
+            return CreatedAtAction("GetTwilioSmsModel", new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
+        }
 
         // DELETE: api/Sms/5
         [HttpDelete("{id}")]

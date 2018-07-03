@@ -6,6 +6,7 @@ namespace WebApp.Models
     public class TwilioSmsModel
     {
         [Key]
+        public int Id { get; set; }
         public string SmsSid { get; set; }
         public string ApiVersion { get; set; }
         public string AccountSid {get;set;}
