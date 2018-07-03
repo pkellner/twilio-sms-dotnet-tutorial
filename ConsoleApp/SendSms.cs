@@ -1,4 +1,4 @@
-﻿using ConsoleApp.Models;
+using ConsoleApp.Models;
 using Microsoft.Extensions.Options;
 using System;
 using Twilio;
@@ -24,10 +24,9 @@ namespace ConsoleApp
             var message = MessageResource.Create(
                 body: messageBody,
                 from: new Twilio.Types.PhoneNumber(fromNumber),
-                //mediaUrl: Promoter.ListOfOne(new Uri("http://www.example.com/cheeseburger.png")),
                 to: new Twilio.Types.PhoneNumber(toNumber),
-                //statusCallback: new Uri("http://requestbin.fullcontact.com/r0h0mfr0"),
-                statusCallback: new Uri("http://519f04fe.ngrok.io/TwilioSms")
+                //statusCallback: new Uri("http://requestbin.net/r/1mlxpv31")
+                statusCallback: new Uri("http://bd621b2c.ngrok.io/api/sms")
             );
 
             return message.Sid;
