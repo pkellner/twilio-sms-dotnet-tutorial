@@ -2,8 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
+
 
 namespace ConsoleApp
 {
@@ -47,36 +46,14 @@ namespace ConsoleApp
                 .Configure<SecretStuff>(Configuration.GetSection(nameof(SecretStuff)))
                 .AddOptions()
                 .AddLogging()
-                .AddSingleton<ISecretRevealer, SecretRevealer>()
+                .AddSingleton<ISendSms, SendSms>()
                 .BuildServiceProvider();
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // Get the service you need - DI will handle any dependencies - in this case IOptions<SecretStuff>
-            var revealer = serviceProvider.GetService<ISecretRevealer>();
-
-            revealer.Reveal();
-
-            Console.ReadKey();
-
-
-            const string accountSid = "ACe1797bb4dd64e533422f6fe98840e51c";
-            const string authToken = "xxx";
-
-            TwilioClient.Init(accountSid, authToken);
-
-            var message = MessageResource.Create(
-                body: "Let's grab lunch at Milliways tomorrow!xxx",
-                from: new Twilio.Types.PhoneNumber("+14157920678"),
-                //mediaUrl: Promoter.ListOfOne(new Uri("http://www.example.com/cheeseburger.png")),
-                to: new Twilio.Types.PhoneNumber("+14082341385"),
-                //statusCallback: new Uri("http://requestbin.fullcontact.com/r0h0mfr0"),
-                statusCallback: new Uri("http://519f04fe.ngrok.io/TwilioSms")
-            );
-
-            Console.WriteLine(message.Sid);
-
-
+            var sendSms = serviceProvider.GetService<ISendSms>();
+            var result = sendSms.Send("+14157920678", "+14082341385", "Faxing Using Secrets");
+            Console.WriteLine("sendSms returned:" + result);
         }
     }
 }
