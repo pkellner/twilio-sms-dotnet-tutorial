@@ -52,7 +52,7 @@ namespace ConsoleApp
             var serviceProvider = services.BuildServiceProvider();
 
             var sendSms = serviceProvider.GetService<ISendSms>();
-            var result = sendSms.Send("+14157920678", "+14082341385", "Faxing Using Secrets");
+            var result = sendSms.Send("+14157920678", "+14082341385", "Faxing Using Secrets From Mac");
             Console.WriteLine("sendSms returned:" + result);
         }
     }
