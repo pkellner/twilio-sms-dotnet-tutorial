@@ -59,7 +59,8 @@ namespace WebApp.Controllers
 
         // PUT: api/Sms/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTwilioSmsModel([FromRoute] string id, [FromBody] TwilioSmsModel twilioSmsModel)
+        public async Task<IActionResult> PutTwilioSmsModel(
+            [FromRoute] string id, [FromBody] TwilioSmsModel twilioSmsModel)
         {
             if (!ModelState.IsValid)
             {
@@ -94,8 +95,8 @@ namespace WebApp.Controllers
 
         // POST: api/Sms
         [HttpPost]
-        //public async Task<IActionResult> PostTwilioSmsModel([FromBody] TwilioSmsModel twilioSmsModel)
-        public async Task<IActionResult> Post([FromForm] TwilioSmsModel twilioSmsModel)
+        public async Task<IActionResult> 
+            Post([FromForm] TwilioSmsModel twilioSmsModel)
         {
             //var twilioSmsModel = new TwilioSmsModel();
             if (!ModelState.IsValid)
@@ -106,7 +107,8 @@ namespace WebApp.Controllers
             _context.TwilioSmsModels.Add(twilioSmsModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTwilioSmsModel", new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
+            return CreatedAtAction("GetTwilioSmsModel", 
+                new { id = twilioSmsModel.SmsSid }, twilioSmsModel);
         }
 
         // DELETE: api/Sms/5
